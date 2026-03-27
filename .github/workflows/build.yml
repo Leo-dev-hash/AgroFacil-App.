@@ -1,0 +1,32 @@
+name: Build AgroFácil Executable
+on: [push]
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Web App
+        run: npm run build
+
+      # Aqui o GitHub usaria uma ferramenta chamada 'Nativefier' 
+      # para criar o .exe rapidinho para você
+      - name: Create EXE
+        run: |
+          npx nativefier --name "AgroFacil" "https://ais-pre-4cjcaurbis443o3hwnn4ai-75418360538.us-east1.run.app" --platform "windows"
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AgroFacil-Windows
+          path: ./*.exe
